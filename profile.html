@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MixSphere - Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="logo">MixSphere</div>
+  <input type="text" class="search" placeholder="Search">
+  <div class="nav-icons">
+    <a href="index.html">🏠</a>
+    <a href="messages.html">✉️</a>
+    <a href="explore.html">🔍</a>
+    <a href="notifications.html">❤️</a>
+    <a href="profile.html">👤</a>
+  </div>
+</nav>
+
+  <!-- Profile Section -->
+  <div class="profile-container">
+    <div class="profile-header">
+      <img src="" alt="Profile Picture" id="profilePic" class="profile-pic">
+      <button id="editProfileButton">Edit Profile</button>
+    </div>
+    <div class="profile-info">
+      <h2 id="username">Username</h2>
+      <p id="bio">Bio</p>
+      <p id="fullName">Full Name</p>
+    </div>
+  </div>
+
+  <!-- Edit Profile Form (hidden initially) -->
+  <div id="editProfileForm" class="hidden">
+    <h3>Edit Profile</h3>
+    <form id="editProfileFormElement">
+      <input type="text" id="newFullName" placeholder="Full Name" required>
+      <input type="text" id="newUsername" placeholder="Username" required>
+      <textarea id="newBio" placeholder="Bio"></textarea>
+      <input type="file" id="newProfilePic" />
+      <button type="submit">Save</button>
+    </form>
+  </div>
+
+  <!-- Link the JavaScript file -->
+  <script src="js/main.js"></script>
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+
+</body>
+</html>

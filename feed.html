@@ -1,0 +1,32 @@
+<!-- Feed Section -->
+<div class="feed-container" id="feedContainer">
+    <!-- Posts will be dynamically inserted here -->
+  </div>
+  
+  <!-- Create Post Form -->
+  <div class="create-post-container">
+    <form id="createPostForm">
+      <input type="text" id="caption" placeholder="Enter caption" required>
+      <input type="file" id="image" required>
+      <button type="submit">Post</button>
+    </form>
+  </div>
+  
+  <!-- Comment Modal (Hidden by Default) -->
+  <div id="commentModal" class="comment-modal">
+    <div class="comment-modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <h2>Comments</h2>
+      <div id="commentsList"></div>
+      <form id="commentForm">
+        <input type="text" id="commentText" placeholder="Write a comment" required>
+        <button type="submit">Comment</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Link the JavaScript file -->
+  <script src="js/main.js"></script>
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+
+  
