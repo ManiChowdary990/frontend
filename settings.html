@@ -36,5 +36,24 @@
 
    <!-- Link the JavaScript file -->
    <script src="js/main.js"></script>
+   <script>
+    function logout() {
+        localStorage.removeItem("token"); // Remove user token
+        alert("Logged out successfully!");
+        window.location.href = "login.html"; // Redirect to login page
+    }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem("token");
+      if (!token) {
+          alert("You must log in first!");
+          window.location.href = "login.html"; // Redirect to login page
+      }
+  });
+</script>
+
+
 </body>
 </html>
