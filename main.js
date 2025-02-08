@@ -393,4 +393,109 @@ async function showComments(postId) {
 }
 
 
+document.addEventListener("DOMContentLoaded", async function () {
+  const response = await fetch("https://your-backend.onrender.com/api/posts");  // Fetch posts from backend
+  const posts = await response.json();  // Parse JSON response
+
+  const postsContainer = document.getElementById("postsContainer");
+  posts.forEach(post => {
+      const postElement = document.createElement("div");
+      postElement.innerHTML = `
+          <h3>${post.user.username}</h3>
+          <p>${post.text}</p>
+          ${post.image ? `<img src="${post.image}" width="300"/>` : ""}
+          <button onclick="likePost('${post._id}')">❤️ Like</button>
+          <button onclick="showComments('${post._id}')">💬 Comments</button>
+          <div id="comments-${post._id}"></div>
+      `;
+      postsContainer.appendChild(postElement);
+  });
+});
+
+// ✅ Like a Post
+async function likePost(postId) {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`https://your-backend.onrender.com/api/posts/${postId}/like`, {
+      method: "PUT",
+      headers: { "Authorization": `Bearer ${token}` },
+  });
+
+  if (response.ok) {
+      alert("Post liked!");
+  } else {
+      alert("Error liking post.");
+  }
+}
+
+// ✅ Show Comments
+async function showComments(postId) {
+  const response = await fetch(`https://your-backend.onrender.com/api/posts/${postId}/comments`);
+  const comments = await response.json();
+
+  const commentsContainer = document.getElementById(`comments-${postId}`);
+  commentsContainer.innerHTML = comments.map(c => `<p>${c.user.username}: ${c.text}</p>`).join("");
+}
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+  const response = await fetch("https://your-backend.onrender.com/api/posts");
+  const posts = await response.json();
+
+  const postsContainer = document.getElementById("postsContainer");
+  posts.forEach(post => {
+      const postElement = document.createElement("div");
+      postElement.innerHTML = `
+          <h3>${post.user.username}</h3>
+          <p>${post.text}</p>
+          ${post.image ? `<img src="${post.image}" width="300"/>` : ""}
+          <button onclick="likePost('${post._id}')">❤️ Like</button>
+          <button onclick="showComments('${post._id}')">💬 Comments</button>
+          <div id="comments-${post._id}"></div>
+      `;
+      postsContainer.appendChild(postElement);
+  });
+});
+
+// login page script
+document.addEventListener("DOMContentLoaded", function () {
+  const loginForm = document.querySelector(".login-container form");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const username = loginForm.querySelector('input[type="text"]').value;
+      const password = loginForm.querySelector('input[type="password"]').value;
+
+      if (!username || !password) {
+        alert("Please fill out all fields.");
+      } else if (password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+      } else {
+        try {
+          const response = await fetch("https://your-backend.onrender.com/api/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (!response.ok) throw new Error("Network response was not ok");
+          const data = await response.json();
+          if (data.message === "Login successful") {
+            localStorage.setItem("token", data.token);
+            window.location.href = "/index.html";
+          } else {
+            alert(data.message);
+          }
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:", error);
+          alert("Something went wrong. Please try again later.");
+        }
+      }
+    });
+  }
+});
+
 
