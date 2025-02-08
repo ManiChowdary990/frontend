@@ -90,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  
   // Handle dynamic loading of posts (example for homepage)
   const feed = document.querySelector(".feed");
 
@@ -246,38 +247,32 @@ document.addEventListener("DOMContentLoaded", function () {
   const API_BASE_URL = "https://your-backend.onrender.com"; // Change this for deployment
 
   // Handle Login
-  const loginForm = document.querySelector(".login-container form");
-  if (loginForm) {
-    loginForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const username = document.querySelector("#username").value;
-      const password = document.querySelector("#password").value;
+  document.getElementById("loginForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-      if (!username || !password) {
-        alert("Please fill out all fields.");
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
+    try {
+        const response = await fetch("https://your-backend.onrender.com/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
         });
 
         const data = await response.json();
+        
         if (response.ok) {
-          localStorage.setItem("authToken", data.token); // Store Token
-          window.location.href = "index.html";
+            localStorage.setItem("token", data.token); // Save token
+            alert("Login successful!");
+            window.location.href = "feed.html"; // Redirect to feed
         } else {
-          alert(data.message);
+            alert("Error: " + data.message);
         }
-      } catch (error) {
+    } catch (error) {
         console.error("Login Error:", error);
-        alert("Error logging in. Try again.");
-      }
-    });
-  }
+        alert("Server error. Please try again later.");
+    }
+});
 
   // Handle Signup
   const signupForm = document.querySelector(".signup-container form");
@@ -396,3 +391,6 @@ async function showComments(postId) {
   const commentsContainer = document.getElementById(`comments-${postId}`);
   commentsContainer.innerHTML = comments.map(c => `<p>${c.user.username}: ${c.text}</p>`).join("");
 }
+
+
+
