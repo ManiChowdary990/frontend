@@ -499,3 +499,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+
+
+// redirect to feed page if user is logged in
+document.addEventListener("DOMContentLoaded", function () {
+  const token = localStorage.getItem("token");
+  if (token) {
+    window.location.href = "/feed.html";
+  }
+});
+
+
