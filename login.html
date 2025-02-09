@@ -36,8 +36,11 @@
                 localStorage.setItem("token", data.token);
                 alert("Login successful!");
 
+                // ✅ Debugging step
+                console.log("Redirecting to feed.html...");
+
                 // ✅ Redirect to feed.html after login
-                window.location.href = "feed.html"; 
+                window.location.href = "feed.html";  
             } catch (error) {
                 console.error("Login Error:", error);
                 alert("Login Failed: " + error.message);
