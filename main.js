@@ -1,171 +1,123 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const API_BASE_URL = "https://social-media-backend-a0so.onrender.com";
+const API_BASE_URL = "https://social-media-backend-rio4.onrender.com";
 
-  // Handle Login
-  const loginForm = document.querySelector(".login-container form");
-  if (loginForm) {
-    loginForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const username = loginForm.querySelector('input[type="text"]').value;
-      const password = loginForm.querySelector('input[type="password"]').value;
-
-      if (!username || !password) {
-        alert("Please fill out all fields.");
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
+// 🔹 Register a New User
+async function registerUser(username, email, password) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
         });
-
         const data = await response.json();
-        if (response.ok) {
-          localStorage.setItem("token", data.token);
-          window.location.href = "/index.html";
+        console.log("Registration Response:", data);
+        alert(data.message || "Registered successfully!");
+    } catch (error) {
+        console.error("Registration Error:", error);
+    }
+}
+
+// 🔹 Login User
+async function loginUser(email, password) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+            alert("Login successful!");
         } else {
-          alert(data.message);
+            alert("Login failed! " + data.message);
         }
-      } catch (error) {
+    } catch (error) {
         console.error("Login Error:", error);
-        alert("Server error. Please try again later.");
-      }
-    });
-  }
+    }
+}
 
-  // Handle Signup
-  const signupForm = document.querySelector(".signup-container form");
-  if (signupForm) {
-    signupForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const email = document.querySelector("#email").value;
-      const fullName = document.querySelector("#fullName").value;
-      const username = document.querySelector("#username").value;
-      const password = document.querySelector("#password").value;
-
-      if (!email || !fullName || !username || !password) {
-        alert("Please fill out all fields.");
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/signup`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, fullName, username, password }),
+// 🔹 Fetch and Display Posts
+async function fetchPosts() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/posts`);
+        const posts = await response.json();
+        const postsContainer = document.getElementById("posts-container");
+        postsContainer.innerHTML = "";
+        posts.forEach(post => {
+            const postElement = document.createElement("div");
+            postElement.className = "post";
+            postElement.innerHTML = `<h3>${post.author}</h3><p>${post.content}</p>`;
+            postsContainer.appendChild(postElement);
         });
-
-        const data = await response.json();
-        if (response.ok) {
-          window.location.href = "login.html";
-        } else {
-          alert(data.message);
-        }
-      } catch (error) {
-        console.error("Signup Error:", error);
-        alert("Error signing up. Try again.");
-      }
-    });
-  }
-
-  // Handle Logout
-  const logoutButton = document.querySelector("#logout");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", () => {
-      localStorage.removeItem("token");
-      window.location.href = "login.html";
-    });
-  }
-
-  // Fetch and display posts
-  async function loadPosts() {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/posts`);
-      const posts = await response.json();
-
-      const postsContainer = document.getElementById("postsContainer");
-      postsContainer.innerHTML = ""; // Clear old posts before adding new ones
-
-      posts.forEach((post) => {
-        const postElement = document.createElement("div");
-        postElement.classList.add("post");
-        postElement.innerHTML = `
-          <h3>${post.user.username}</h3>
-          <p>${post.text}</p>
-          ${post.image ? `<img src="${post.image}" width="300"/>` : ""}
-          <button onclick="likePost('${post._id}')">❤️ Like</button>
-          <button onclick="showComments('${post._id}')">💬 Comments</button>
-          <div id="comments-${post._id}"></div>
-        `;
-        postsContainer.appendChild(postElement);
-      });
     } catch (error) {
-      console.error("Error loading posts:", error);
+        console.error("Error fetching posts:", error);
     }
-  }
-  loadPosts(); // Call this function to load posts
+}
 
-  // Like a Post
-  window.likePost = async function (postId) {
+// 🔹 Create a New Post
+async function createPost(content) {
     const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
-        method: "PUT",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        alert("Post liked!");
-        loadPosts(); // Reload posts to update likes
-      } else {
-        alert("Error liking post.");
-      }
-    } catch (error) {
-      console.error("Like Post Error:", error);
-    }
-  };
-
-  // Show Comments
-  window.showComments = async function (postId) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comments`);
-      const comments = await response.json();
-
-      const commentsContainer = document.getElementById(`comments-${postId}`);
-      commentsContainer.innerHTML = comments
-        .map((c) => `<p>${c.user.username}: ${c.text}</p>`)
-        .join("");
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    }
-  };
-
-  // Real-time Chat
-  const messageForm = document.querySelector("#sendMessageForm");
-  const messageList = document.querySelector("#messageList");
-  if (messageForm) {
-    const socket = io(API_BASE_URL);
-
-    messageForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const receiverId = document.querySelector("#receiverId").value;
-      const messageText = document.querySelector("#messageText").value;
-
-      if (!receiverId || !messageText) {
-        alert("Enter a valid message!");
+    if (!token) {
+        alert("You must be logged in to create a post!");
         return;
-      }
+    }
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/posts`, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
+            },
+            body: JSON.stringify({ content }),
+        });
+        const data = await response.json();
+        console.log("Post Created:", data);
+        alert("Post created successfully!");
+        fetchPosts(); // Refresh posts
+    } catch (error) {
+        console.error("Error creating post:", error);
+    }
+}
 
-      socket.emit("send_message", { receiver: receiverId, message: messageText });
-      document.querySelector("#messageText").value = "";
-    });
+// 🔹 Real-Time Chat with WebSockets
+const socket = io(API_BASE_URL);
 
-    socket.on("receive_message", (data) => {
-      const messageElement = document.createElement("div");
-      messageElement.innerHTML = `<strong>${data.sender}:</strong> ${data.message}`;
-      messageList.appendChild(messageElement);
-    });
-  }
+socket.on("receive_message", (data) => {
+    const chatContainer = document.getElementById("chat-container");
+    const messageElement = document.createElement("p");
+    messageElement.textContent = `${data.username}: ${data.message}`;
+    chatContainer.appendChild(messageElement);
 });
+
+// 🔹 Send Chat Message
+function sendMessage() {
+    const username = localStorage.getItem("username") || "Anonymous";
+    const message = document.getElementById("chat-message").value;
+    if (message.trim() === "") return;
+    socket.emit("send_message", { username, message });
+    document.getElementById("chat-message").value = "";
+}
+
+// 🔹 Event Listeners
+document.getElementById("login-btn").addEventListener("click", () => {
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    loginUser(email, password);
+});
+
+document.getElementById("register-btn").addEventListener("click", () => {
+    const username = document.getElementById("register-username").value;
+    const email = document.getElementById("register-email").value;
+    const password = document.getElementById("register-password").value;
+    registerUser(username, email, password);
+});
+
+document.getElementById("post-btn").addEventListener("click", () => {
+    const content = document.getElementById("post-content").value;
+    createPost(content);
+});
+
+document.getElementById("send-btn").addEventListener("click", sendMessage);
+
+// 🔹 Fetch Posts on Page Load
+fetchPosts();
