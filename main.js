@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         try {
           // Send login request to backend
-          const response = await fetch("https://your-backend.onrender.com/api/login", {
+          const response = await fetch("https://social-media-backend-a0so.onrender.com/api/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
           // Send signup request to backend
-          const response = await fetch("https://your-backend.onrender.com/api/signup", {
+          const response = await fetch("https://social-media-backend-a0so.onrender.com/api/signup", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
       formData.append("image", image);
 
       try {
-        const response = await fetch("https://your-backend.onrender.com/api/create_post", {
+        const response = await fetch("https://social-media-backend-a0so.onrender.com/api/create_post", {
           method: "POST",
           body: formData,
         });
@@ -253,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const password = document.getElementById("password").value;
 
     try {
-        const response = await fetch("https://your-backend.onrender.com/api/auth/login", {
+        const response = await fetch("https://social-media-backend-a0so.onrender.com/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 document.addEventListener("DOMContentLoaded", async function () {
-  const response = await fetch("https://your-backend.onrender.com/api/posts");
+  const response = await fetch("https://social-media-backend-a0so.onrender.com/api/posts");
   const posts = await response.json();
 
   const postsContainer = document.getElementById("postsContainer");
@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 // ✅ Like a Post
 async function likePost(postId) {
   const token = localStorage.getItem("token");
-  const response = await fetch(`https://your-backend.onrender.com/api/posts/${postId}/like`, {
+  const response = await fetch(`https://social-media-backend-a0so.onrender.com/api/posts/${postId}/like`, {
       method: "PUT",
       headers: { "Authorization": `Bearer ${token}` },
   });
@@ -385,7 +385,7 @@ async function likePost(postId) {
 
 // ✅ Show Comments
 async function showComments(postId) {
-  const response = await fetch(`https://your-backend.onrender.com/api/posts/${postId}/comments`);
+  const response = await fetch(`https://social-media-backend-a0so.onrender.com/api/posts/${postId}/comments`);
   const comments = await response.json();
 
   const commentsContainer = document.getElementById(`comments-${postId}`);
@@ -394,7 +394,7 @@ async function showComments(postId) {
 
 
 document.addEventListener("DOMContentLoaded", async function () {
-  const response = await fetch("https://your-backend.onrender.com/api/posts");  // Fetch posts from backend
+  const response = await fetch("https://social-media-backend-a0so.onrender.com/api/posts");  // Fetch posts from backend
   const posts = await response.json();  // Parse JSON response
 
   const postsContainer = document.getElementById("postsContainer");
@@ -415,7 +415,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 // ✅ Like a Post
 async function likePost(postId) {
   const token = localStorage.getItem("token");
-  const response = await fetch(`https://your-backend.onrender.com/api/posts/${postId}/like`, {
+  const response = await fetch(`https://social-media-backend-a0so.onrender.com/api/posts/${postId}/like`, {
       method: "PUT",
       headers: { "Authorization": `Bearer ${token}` },
   });
@@ -429,7 +429,7 @@ async function likePost(postId) {
 
 // ✅ Show Comments
 async function showComments(postId) {
-  const response = await fetch(`https://your-backend.onrender.com/api/posts/${postId}/comments`);
+  const response = await fetch(`https://social-media-backend-a0so.onrender.com/api/posts/${postId}/comments`);
   const comments = await response.json();
 
   const commentsContainer = document.getElementById(`comments-${postId}`);
@@ -438,7 +438,7 @@ async function showComments(postId) {
 
 
 document.addEventListener("DOMContentLoaded", async function () {
-  const response = await fetch("https://your-backend.onrender.com/api/posts");
+  const response = await fetch("https://social-media-backend-a0so.onrender.com/api/posts");
   const posts = await response.json();
 
   const postsContainer = document.getElementById("postsContainer");
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Password must be at least 6 characters long.");
       } else {
         try {
-          const response = await fetch("https://your-backend.onrender.com/api/auth/login", {
+          const response = await fetch("https://social-media-backend-a0so.onrender.com/api/auth/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
