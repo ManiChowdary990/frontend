@@ -33,7 +33,7 @@
                 if (response.ok) {
                     alert("Login successful!");
                     localStorage.setItem("token", data.token); // Save token
-                    window.location.href = "home.html"; // Redirect to home page
+                    window.location.href = "/home.html"; // Redirect to home page
                 } else {
                     alert(data.message || "Invalid login details");
                 }
